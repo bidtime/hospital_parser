@@ -224,8 +224,8 @@ var i: integer;
   S, str: string;
 begin
   memoCtx.Clear;
-  addCtx('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL'
-    + #9 + '级别' + '性质' + #9 + '简介' + #9 + '地址' + #9 + '路线' + #9 + '电话');
+  addCtx('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL' + #9
+    + '级别/性质' + #9 + '简介' + #9 + '地址' + #9 + '路线' + #9 + '电话');
   for I := 1 to memoHospital.Lines.Count - 1 do begin
     S := memoHospital.Lines[I];
     str := doIt(S);

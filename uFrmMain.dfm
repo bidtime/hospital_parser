@@ -223,7 +223,6 @@ object frmMain: TfrmMain
       Align = alClient
       ScrollBars = ssHorizontal
       TabOrder = 0
-      ExplicitWidth = 30
     end
     object memoHospital: TMemo
       Left = 848
@@ -2652,7 +2651,6 @@ object frmMain: TfrmMain
         #20016#30000#9#20854#20182#9#20339#32654#9#20016#30000'('#36827#21475')')
       ScrollBars = ssHorizontal
       TabOrder = 2
-      ExplicitLeft = 592
     end
   end
   object StatusBar1: TStatusBar

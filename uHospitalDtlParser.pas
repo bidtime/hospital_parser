@@ -76,7 +76,7 @@ class function THospitalDtlParser.parserLevel(const html: string; const cb: TGet
         cb(ele.InnerHtml);
         do_ct(ele, strs);
       end;
-      Result := TCharSplit.GetStrOfSplit(strs, #9);
+      Result := TCharSplit.GetStrOfSplit(strs, ' ');
     finally
       strs.Free;
     end;
