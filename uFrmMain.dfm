@@ -49,7 +49,7 @@ object frmMain: TfrmMain
     object cbxURL: TComboBox
       Left = 8
       Top = 0
-      Width = 377
+      Width = 273
       Height = 21
       TabOrder = 1
       Text = 'https://www.haodf.com/yiyuan/beijing/list.htm'
@@ -57,7 +57,7 @@ object frmMain: TfrmMain
         'https://www.haodf.com/yiyuan/beijing/list.htm')
     end
     object ToolButton5: TToolButton
-      Left = 385
+      Left = 281
       Top = 0
       Width = 8
       Caption = 'ToolButton5'
@@ -65,14 +65,14 @@ object frmMain: TfrmMain
       Style = tbsSeparator
     end
     object ToolButton2: TToolButton
-      Left = 393
+      Left = 289
       Top = 0
       Caption = 'list'
       ImageIndex = 1
       OnClick = ToolButton2Click
     end
     object ToolButton3: TToolButton
-      Left = 446
+      Left = 342
       Top = 0
       Width = 8
       Caption = 'ToolButton3'
@@ -80,14 +80,14 @@ object frmMain: TfrmMain
       Style = tbsSeparator
     end
     object ToolButton1: TToolButton
-      Left = 454
+      Left = 350
       Top = 0
       Caption = 'download'
       ImageIndex = 6
       OnClick = ToolButton1Click
     end
     object ToolButton8: TToolButton
-      Left = 507
+      Left = 403
       Top = 0
       Width = 8
       Caption = 'ToolButton8'
@@ -95,22 +95,37 @@ object frmMain: TfrmMain
       Style = tbsSeparator
     end
     object ToolButton7: TToolButton
-      Left = 515
+      Left = 411
       Top = 0
       Caption = 'detail'
       ImageIndex = 7
       OnClick = ToolButton7Click
     end
     object ToolButton6: TToolButton
-      Left = 568
+      Left = 464
       Top = 0
       Width = 8
       Caption = 'ToolButton6'
       ImageIndex = 8
       Style = tbsSeparator
     end
+    object ToolButton9: TToolButton
+      Left = 472
+      Top = 0
+      Caption = 'repair'
+      ImageIndex = 7
+      OnClick = ToolButton9Click
+    end
+    object ToolButton4: TToolButton
+      Left = 525
+      Top = 0
+      Width = 8
+      Caption = 'ToolButton4'
+      ImageIndex = 7
+      Style = tbsSeparator
+    end
     object cbxStop: TCheckBox
-      Left = 576
+      Left = 533
       Top = 0
       Width = 44
       Height = 21
@@ -118,57 +133,54 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
     object ToolButton12: TToolButton
-      Left = 620
+      Left = 577
       Top = 0
       Width = 8
       Caption = '12'
       ImageIndex = 6
       Style = tbsSeparator
     end
-    object cbxBrand: TCheckBox
-      Left = 628
+    object Edit1: TEdit
+      Left = 585
       Top = 0
-      Width = 52
+      Width = 49
       Height = 21
-      Caption = 'brand'
-      Checked = True
-      State = cbChecked
-      TabOrder = 2
+      TabOrder = 3
+      Text = '3'
     end
-    object cbxSerie: TCheckBox
-      Left = 680
+    object UpDown1: TUpDown
+      Left = 634
       Top = 0
-      Width = 47
+      Width = 19
       Height = 21
-      Caption = 'serie'
-      Checked = True
-      State = cbChecked
+      Associate = Edit1
+      Position = 3
       TabOrder = 4
     end
-    object ToolButton4: TToolButton
-      Left = 727
+    object ToolButton11: TToolButton
+      Left = 653
       Top = 0
       Width = 8
-      Caption = 'ToolButton4'
+      Caption = 'ToolButton11'
       ImageIndex = 7
       Style = tbsSeparator
     end
     object Label1: TLabel
-      Left = 735
+      Left = 661
       Top = 0
       Width = 36
       Height = 21
       Caption = 'timeout'
     end
     object spedTimeout: TSpinEdit
-      Left = 771
+      Left = 697
       Top = 0
       Width = 51
       Height = 22
       MaxValue = 0
       MinValue = 0
-      TabOrder = 3
-      Value = 200
+      TabOrder = 2
+      Value = 0
     end
   end
   object memoCtx: TMemo

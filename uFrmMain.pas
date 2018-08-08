@@ -21,8 +21,6 @@ type
     ToolButton8: TToolButton;
     cbxStop: TCheckBox;
     ToolButton12: TToolButton;
-    cbxBrand: TCheckBox;
-    cbxSerie: TCheckBox;
     ToolButton4: TToolButton;
     Label1: TLabel;
     spedTimeout: TSpinEdit;
@@ -50,11 +48,16 @@ type
     NetHTTPClient1: TNetHTTPClient;
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
+    ToolButton9: TToolButton;
+    ToolButton11: TToolButton;
+    Edit1: TEdit;
+    UpDown1: TUpDown;
     procedure ToolButton2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton7Click(Sender: TObject);
+    procedure ToolButton9Click(Sender: TObject);
   private
     { Private declarations }
     FHttpClt: TNetHttpClt;
@@ -68,6 +71,7 @@ type
     function getRaw(netHttp: TNetHttpClient; const url: String;
       encode: TEncoding; const cb: TGetStrProc): String;
     procedure addCtx(const S: string);
+    function detailRequest(const S: string): string;
   public
     { Public declarations }
   end;
@@ -176,15 +180,23 @@ procedure TfrmMain.ToolButton1Click(Sender: TObject);
 var i: integer;
   S: string;
 begin
+  self.cbxStop.Checked := false;
   memoHospital.Clear;
   memoHospital.Lines.Add('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL');
   //memoHospital.Lines.Add('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL'
   //  + #9 + '级别' + '性质' + #9 + '简介' + #9 + '地址' + #9 + '路线' + #9 + '电话');
   for I := 1 to memoProvinces.Lines.Count - 1 do begin
-    S := memoProvinces.Lines[I];
+    if self.cbxStop.Checked then begin
+      break;
+    end;
+    S := memoProvinces.Lines[I].Trim;
+    if S.IsEmpty then begin
+      continue;
+    end;
     //
     doIt(S, memoHospital.Lines);
     //exit;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -198,11 +210,41 @@ begin
 end;
 
 procedure TfrmMain.ToolButton7Click(Sender: TObject);
+var i: integer;
+  S, str: string;
+begin
+  self.cbxStop.Checked := false;
+  memoCtx.Clear;
+  addCtx('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL' + #9
+    + '级别/性质' + #9 + '简介' + #9 + '地址' + #9 + '路线' + #9 + '电话');
+  for I := 1 to memoHospital.Lines.Count - 1 do begin
+    if self.cbxStop.Checked then begin
+      break;
+    end;
+    Sleep(0);
+    S := memoHospital.Lines[I].Trim;
+    if S.IsEmpty then begin
+      continue;
+    end;
+    str := detailRequest(S);
+    //addCtx( S + #9 + str );
+    addCtx( S + str );
+    Sleep(0);
+    //Application.ProcessMessages;
+  end;
+end;
+
+function TfrmMain.detailRequest(const S: string): string;
+
   function doRequest(const prov: string; const url: string): string;
   var html: string;
   begin
     try
       html := get(url, TEncoding.GetEncoding(936),doUrlEvent);
+      sleep(self.spedTimeout.Value);
+      if html.trim.isEmpty() then begin
+        addLog('html empty: ' + url);
+      end;
     Except on e: Exception do begin
         addLog('invalid: ' + url);
       end;
@@ -210,26 +252,61 @@ procedure TfrmMain.ToolButton7Click(Sender: TObject);
     Result := THospitalDtlParser.parserIt(html, doUrlEvent);
   end;
 
-  function doIt(const S: string): string;
-  var url: string;
+var url: string;
+begin
+  url := TCharSplit.getSplitIdx(S, #9, 3).trim;
+  if url='' then begin
+    addLog('error:' + S);
+  end else begin
+    Result := doRequest(name, url);
+  end;
+end;
+
+procedure TfrmMain.ToolButton9Click(Sender: TObject);
+
+  function mergeIt(const S: string): string;
   begin
-    url := TCharSplit.getSplitIdx(S, #9, 3).trim;
-    if url='' then begin
-      addLog('error:' + S);
-    end else begin
-      Result := doRequest(name, url);
+    Result := TCharSplit.getSplitIdx(S, #9, 0);
+    Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 1);
+    Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 2);
+    Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 3);
+  end;
+
+  procedure buildIt();
+  var i: integer;
+    S, str: string;
+  begin
+    for I := 1 to memoCtx.Lines.Count - 1 do begin
+      if self.cbxStop.Checked then begin
+        break;
+      end;
+      Sleep(0);
+      S := memoCtx.Lines[I].Trim;
+      if (S.IsEmpty) or (TCharSplit.getSplitCount(S, #9) >=6 ) then begin
+        continue;
+      end;
+      str := detailRequest(S);
+      memoCtx.Lines[I] := mergeIt(S) + str;
+      Sleep(0);
+      //Application.ProcessMessages;
     end;
   end;
-var i: integer;
+
+var i, ns: integer;
   S, str: string;
 begin
-  memoCtx.Clear;
-  addCtx('省市' + #9 + '区县' + #9 +'医院名称' + #9 +	'URL' + #9
-    + '级别/性质' + #9 + '简介' + #9 + '地址' + #9 + '路线' + #9 + '电话');
-  for I := 1 to memoHospital.Lines.Count - 1 do begin
-    S := memoHospital.Lines[I];
-    str := doIt(S);
-    addCtx( S + #9 + str );
+  ns := StrToIntDef(edit1.Text, 1);
+  self.cbxStop.Checked := false;
+  memoCtx.Lines.BeginUpdate;
+  try
+    for I := 0 to ns - 1 do begin
+      if self.cbxStop.Checked then begin
+        break;
+      end;
+      buildIt();
+    end;
+  finally
+    memoCtx.Lines.EndUpdate;
   end;
 end;
 

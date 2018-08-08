@@ -18,7 +18,7 @@ type
 
 implementation
 
-uses HtmlParser_XE3UP, uCharSplit, uMyTextFile;
+uses HtmlParser_XE3UP, uCharSplit, uMyTextFile, Forms;
 
 { THospitalDtlParser }
 
@@ -53,7 +53,7 @@ class function THospitalDtlParser.parserLevel(const html: string; const cb: TGet
         cb(ele.InnerHtml);
         //
         clzName := ele.Attributes['class'];
-        if SameText(clzName, 'hospital-label-item') then begin
+        if clzName.Contains('hospital-label-item') then begin
           //strs.Add(ele.InnerText);
           str := ele.InnerText;
           str := rm_fmt(str.Trim);
@@ -166,6 +166,8 @@ class function THospitalDtlParser.parserIt(const html: string; const cb: TGetStr
 var level, info: string;
 begin
   level := parserLevel(html, cb);
+  Sleep(0);
+  //Application.ProcessMessages;
   info := parserInfo(html, cb);
   Result := level + #9 + info;
 end;
