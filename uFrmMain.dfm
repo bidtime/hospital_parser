@@ -146,7 +146,7 @@ object frmMain: TfrmMain
       Width = 49
       Height = 21
       TabOrder = 3
-      Text = '3'
+      Text = '1000'
     end
     object UpDown1: TUpDown
       Left = 634

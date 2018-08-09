@@ -100,7 +100,7 @@ end;
 
 procedure TfrmMain.addLogMod(const S: string; const nmod: integer);
 begin
-  memoLog.Lines.Add(IntToStr(memoLog.lines.count) + '.' + '  ' + s);
+//  memoLog.Lines.Add(IntToStr(memoLog.lines.count) + '.' + '  ' + s);
   self.setStatus(IntToStr(memoLog.Tag)+'/'+s);
 end;
 
@@ -232,6 +232,7 @@ begin
     Sleep(0);
     //Application.ProcessMessages;
   end;
+  ToolButton9.OnClick(nil);
 end;
 
 function TfrmMain.detailRequest(const S: string): string;
@@ -270,12 +271,14 @@ procedure TfrmMain.ToolButton9Click(Sender: TObject);
     Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 1);
     Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 2);
     Result := Result + #9 + TCharSplit.getSplitIdx(S, #9, 3);
+    Result := Result + #9;
   end;
 
-  procedure buildIt();
-  var i: integer;
+  function buildIt(): integer;
+  var i, counts: integer;
     S, str: string;
   begin
+    counts := 1;
     for I := 1 to memoCtx.Lines.Count - 1 do begin
       if self.cbxStop.Checked then begin
         break;
@@ -283,6 +286,7 @@ procedure TfrmMain.ToolButton9Click(Sender: TObject);
       Sleep(0);
       S := memoCtx.Lines[I].Trim;
       if (S.IsEmpty) or (TCharSplit.getSplitCount(S, #9) >=6 ) then begin
+        inc(counts);
         continue;
       end;
       str := detailRequest(S);
@@ -290,10 +294,11 @@ procedure TfrmMain.ToolButton9Click(Sender: TObject);
       Sleep(0);
       //Application.ProcessMessages;
     end;
+    //
+    Result := counts;
   end;
 
-var i, ns: integer;
-  S, str: string;
+var i, ns, counts: integer;
 begin
   ns := StrToIntDef(edit1.Text, 1);
   self.cbxStop.Checked := false;
@@ -303,7 +308,14 @@ begin
       if self.cbxStop.Checked then begin
         break;
       end;
-      buildIt();
+      counts := buildIt();
+      if counts = memoCtx.Lines.Count then begin
+        break;
+        AddLog('finished. ' + IntToStr(counts));
+      end else begin
+        AddLog('doing... ' + IntToStr(counts));
+      end;
+      Application.ProcessMessages;
     end;
   finally
     memoCtx.Lines.EndUpdate;
